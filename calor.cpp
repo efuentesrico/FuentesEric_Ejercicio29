@@ -5,36 +5,62 @@
 
 
 
+static double D = 1.0;
+static double s = 1.0;
+
+float** createPsi(int N_t, int N_x, string filename);
 
 
 int main(void)
 {
-    float dt = 0.01;
-    double D = 1.0;
-    double s = 1.0;
+    string datos = "datos";
     int N_x = 30;
-    float dx = (1-(-1))/N_x;
-    
-    float t,t_f=0,1;
-    int N_t=dt*(t_f-t);
-    
-    double mesh[N_x][N_x];
-    
-    double G[N_x**2][N_x**2];
-    
-    for (int k)
-    
-    for (int n=0; n<N_t;n_t++){
-        
-    }
+    int N_t= 100;
+    createPsi(N_t,N_x,datos);
 
-    for (int ix=1; ix<nX-1; ix++){
-        Psi[ix][0]=100;
-    }
-    
-    for (int i=0; ix<nX-1; ix++){
-        Psi[ix][0]=100;
-    }
     return 0;
 }
 
+
+float** createPsi(int N_t, int N_x, string filename)
+{
+    
+    float Psi[N_t][N_x];
+    float dx = 2 / N_x ;
+    float dt = 1 / N_t;
+    float t_0 = 0.0;
+    float t_max = 1.0;
+    double x_0 = -1.0;
+    double x_max = 1.0;
+    
+    ofstream outfile;
+    outfile.open(filename);
+    
+    for (int n=0; n<N_t; n++)
+    {
+        for(int j=0; j<N_x; j++)
+        {
+            if (j==0 || j== (N_x - 1))
+            {
+                Psi[n][j] = 0.0;
+            }
+            
+            if (n==0)
+            {
+                Psi[n][j] = 0.0;
+            }
+            
+            else 
+            {
+                Psi[n+1][j] = Psi[n][j] + (((D*dt)/(dx*dx))*(Psi[n][j+1]-(2*Psi[n][j])+Psi[n][j-1]))+(s*dt);
+            }
+            
+            t_0 += dt;
+        }
+        
+        x_0 += dx;
+        
+        outfile << Psi[n][j]<< " "<< x_0 << " "<< Psi[n][j]<< " ";
+        outfile.close();
+    }
+}
